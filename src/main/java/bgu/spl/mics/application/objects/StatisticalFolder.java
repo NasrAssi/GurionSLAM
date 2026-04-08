@@ -17,14 +17,14 @@ public class StatisticalFolder {
     private int numDetectedObjects;  
     private int numTrackedObjects;    
     private int numLandmarks;       
-    private Map<String, LandMark> landmarks;
+    private Map<String, LandMark> landMarks;
 
     private StatisticalFolder() {
         this.systemRuntime = 0;
         this.numDetectedObjects = 0;
         this.numTrackedObjects = 0;
         this.numLandmarks = 0;
-        landmarks = new ConcurrentHashMap<>();
+        landMarks = new ConcurrentHashMap<>();
     }
 
     public static StatisticalFolder getInstance(){
@@ -73,11 +73,11 @@ public class StatisticalFolder {
     }
 
     public synchronized Map<String, LandMark> getLandmarks() {
-        return landmarks;
+        return landMarks;
     }
 
-    public synchronized void addLandmarks(LandMark landmarks) {
-        this.landmarks.put(landmarks.getId(), landmarks);
+    public synchronized void addLandmarks(LandMark landmark) {
+        this.landMarks.put(landmark.getId(), landmark);
     }
 
 }

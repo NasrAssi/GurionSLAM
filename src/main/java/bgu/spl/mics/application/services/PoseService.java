@@ -60,8 +60,9 @@ public class PoseService extends MicroService {
         // Subscribe to TerminatedBroadcast for graceful shutdown
         subscribeBroadcast(TerminatedBroadcast.class, terminate -> {
             if(terminate.getServiceName().equals("TimeService")){
-                terminate();
                 gpsimu.setStatus(STATUS.DOWN);
+                sendBroadcast(new TerminatedBroadcast(getName()));
+                terminate();
             }
         });
     }

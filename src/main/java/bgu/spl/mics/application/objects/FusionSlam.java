@@ -133,26 +133,22 @@ public class FusionSlam {
      * @POST Adds the landmark to the global map or updates an existing one.
      */
     public synchronized Boolean addLandmark(LandMark object) {
-        if (alreadyExist(object.getId()) != null) {
-            LandMark oldM = alreadyExist(object.getId());
+        LandMark oldM = alreadyExist(object.getId());
+        if (oldM != null) {
             LinkedList<CloudPoint> resultCoordinates = new LinkedList<>();
 
-            for (int i = 0; i < object.getCoordinates().size() && i < oldM.getCoordinates().size(); i++) {
-                double x;
-                double y;
-
-                x = (object.getCoordinates().get(i).getX() + oldM.getCoordinates().get(i).getX()) / 2;
-                y = (object.getCoordinates().get(i).getY() + oldM.getCoordinates().get(i).getY()) / 2;
-
-                CloudPoint point = new CloudPoint(x, y);
-                resultCoordinates.add(point);
+            int minSize = Math.min(object.getCoordinates().size(), oldM.getCoordinates().size());
+            for (int i = 0; i < minSize; i++) {
+                double x = (object.getCoordinates().get(i).getX() + oldM.getCoordinates().get(i).getX()) / 2;
+                double y = (object.getCoordinates().get(i).getY() + oldM.getCoordinates().get(i).getY()) / 2;
+                resultCoordinates.add(new CloudPoint(x, y));
             }
             oldM.setCoordinates(resultCoordinates);
+            return false;
         } else {
             landmarks.add(object);
             return true;
         }
-        return false;
     }
 
 

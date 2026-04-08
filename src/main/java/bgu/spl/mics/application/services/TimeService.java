@@ -40,6 +40,12 @@ public class TimeService extends MicroService {
             terminate();
         });
 
+        subscribeBroadcast(TerminatedBroadcast.class, terminated -> {
+            if (terminated.getServiceName().equals(getName())) {
+                terminate();
+            }
+        });
+
         Thread timerThread = new Thread(() -> {
             for (int tick = 1; tick <= duration; tick++) {
                 try {
@@ -52,7 +58,6 @@ public class TimeService extends MicroService {
                 stats.incrementRuntime();
             }
             sendBroadcast(new TerminatedBroadcast(getName()));
-            terminate();
             System.out.println("TimeService has terminated");
         });
         timerThread.setDaemon(true);

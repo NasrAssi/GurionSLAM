@@ -55,10 +55,17 @@ public class TrackedObject {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true; 
+        if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
 
         TrackedObject other = (TrackedObject) obj;
         return id.equals(other.id) && time == other.time;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + time;
+        return result;
     }
 }

@@ -3,7 +3,16 @@
     "allow": [
       "Bash(mvn compile:*)",
       "Bash(where javac:*)",
-      "Bash(java -version)"
+      "Bash(java -version)",
+      "Bash(ls *.xml)",
+      "Bash(where mvn:*)",
+      "Bash(where.exe mvn:*)",
+      "Bash(ls:*)",
+      "Bash(where.exe mvn.cmd)",
+      "Read(//c//**)",
+      "Bash(ls /c/maven*/bin/mvn)",
+      "Read(//c/Users/naser/scoop/apps/**)",
+      "Read(//c/Users/naser/**)"
     ]
   }
 }

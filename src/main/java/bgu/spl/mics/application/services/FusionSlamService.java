@@ -55,14 +55,12 @@ public class FusionSlamService extends MicroService {
         });
       
         subscribeBroadcast(TerminatedBroadcast.class, terminate -> {
-           
-            fusionSlam.decrementNumberOfSensors();
-            if (fusionSlam.getNumberOfSensors() == 0) {
-                System.out.println("[FusionSlamService] terminated");
-                terminate();
-            }
-            if(terminate.getServiceName().equals("TimeService")){
-                terminate();
+            if (!terminate.getServiceName().equals("TimeService")) {
+                fusionSlam.decrementNumberOfSensors();
+                if (fusionSlam.getNumberOfSensors() == 0) {
+                    System.out.println("[FusionSlamService] terminated");
+                    terminate();
+                }
             }
         });
     }

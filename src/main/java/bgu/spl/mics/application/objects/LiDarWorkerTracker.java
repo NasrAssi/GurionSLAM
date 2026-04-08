@@ -67,7 +67,7 @@ public class LiDarWorkerTracker {
     public void addStampedObjects(StampedDetectedObjects obj, int tickCount) {
         for (DetectedObject detect : obj.getDetectedObjects()) {
             for (StampedCloudPoints point : instance.getCloudPoints()) {
-                if (point.getTime() == obj.getTime() && detect.getId().equals(point.getId()) && point.getTime()== tickCount) {
+                if (point.getTime() == obj.getTime() && detect.getId().equals(point.getId())) {
                     lastTrackedObjects.add(new TrackedObject(detect.getId(), point.getTime(), detect.getDescription(), point.getCloudPoints()));
                     // Increment the processing counter in the instance
                     instance.incrementCounter();

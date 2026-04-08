@@ -31,10 +31,19 @@ public class CloudPoint {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true; 
+        if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         CloudPoint point = (CloudPoint) obj;
-        return x == point.x && y == point.y;
+        return Double.compare(x, point.x) == 0 && Double.compare(y, point.y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        long xBits = Double.doubleToLongBits(x);
+        long yBits = Double.doubleToLongBits(y);
+        int result = (int) (xBits ^ (xBits >>> 32));
+        result = 31 * result + (int) (yBits ^ (yBits >>> 32));
+        return result;
     }
 
 }

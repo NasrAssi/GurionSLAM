@@ -56,6 +56,11 @@ public class LandMark {
         if (obj == null || getClass() != obj.getClass()) return false;
 
         LandMark landmark = (LandMark) obj;
-        return id.equals(landmark.id); 
+        return id.equals(landmark.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

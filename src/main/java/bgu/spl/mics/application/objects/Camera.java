@@ -48,11 +48,9 @@ public class Camera {
         this.detectedStamps = 0;
         Gson gson = new Gson();
         Type type = new TypeToken<Map<String, List<StampedDetectedObjects>>>(){}.getType();
-        try {
-            FileReader file = new FileReader(dataPath);
+        try (FileReader file = new FileReader(dataPath)) {
             Map<String, List<StampedDetectedObjects>> map = gson.fromJson(file, type);
             this.detectedObjectsList = map.get(key);
-            file.close();
         } catch (Exception ignored) {}
     }
 
@@ -114,10 +112,11 @@ public class Camera {
         }
 
         // Collect detected objects that are ready (time + frequency <= currentTime)
-        StampedDetectedObjects detected = null;
+        int originalTime = -1;
         for (StampedDetectedObjects obj : detectedObjectsList) {
             if (obj.getTime() + frequency == currentTime) {
-                detected = obj;
+                originalTime = obj.getTime();
+                detectedStamps++;
                 for (DetectedObject detect : obj.getDetectedObjects()) {
                     if (!detect.getId().equals("ERROR")) {
                         objects.add(detect);
@@ -126,14 +125,11 @@ public class Camera {
             }
         }
 
-        if (detected != null) {
-            detectedStamps++;
-        }
         if (detectedObjectsList.size() == detectedStamps) {
             setStatus(STATUS.DOWN);
         }
         if (objects.isEmpty()) return null;
-        return new StampedDetectedObjects(currentTime, objects);
+        return new StampedDetectedObjects(originalTime, objects);
     }
 
     /**
