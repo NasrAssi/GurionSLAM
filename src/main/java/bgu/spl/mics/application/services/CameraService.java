@@ -56,6 +56,7 @@ public class CameraService extends MicroService {
             }
             if (camera.getStatus() == STATUS.ERROR) {
                 sendBroadcast(new CrashedBroadcast(getName(), camera.getCrashReason()));
+                terminate();
             }
         });
 

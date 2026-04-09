@@ -96,6 +96,8 @@ public class Camera {
      * @POST Returns detected objects at the given time or null if no objects detected. Updates detected stamps and status.
      */
     public synchronized StampedDetectedObjects detect(int currentTime) {
+        if (status != STATUS.UP) return null;
+
         List<DetectedObject> objects = new ArrayList<>();
 
         // Check for ERROR objects at current time

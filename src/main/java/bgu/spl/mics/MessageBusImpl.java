@@ -108,13 +108,14 @@ public class MessageBusImpl implements MessageBus {
             subscribers.add(m);
         }
 
+        LinkedBlockingQueue<Message> q = micros.get(m);
+        if (q == null) {
+            return null;
+        }
+
         Future<T> future = new Future<>();
         future_events.put(e, future);
-
-        LinkedBlockingQueue<Message> q = micros.get(m);
-        if (q != null) {
-            q.add(e);
-        }
+        q.add(e);
         return future;
     }
 

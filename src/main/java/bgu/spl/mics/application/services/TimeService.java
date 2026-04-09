@@ -15,6 +15,7 @@ public class TimeService extends MicroService {
     private final int tickTime;
     private final int duration;
     private final StatisticalFolder stats = StatisticalFolder.getInstance();
+    private volatile boolean running = true;
 
     /**
      * Constructor for TimeService.
@@ -36,6 +37,7 @@ public class TimeService extends MicroService {
     @Override
     protected void initialize() {
         subscribeBroadcast(CrashedBroadcast.class, crashed -> {
+            running = false;
             sendBroadcast(new TerminatedBroadcast(getName()));
             terminate();
         });
@@ -47,18 +49,21 @@ public class TimeService extends MicroService {
         });
 
         Thread timerThread = new Thread(() -> {
-            for (int tick = 1; tick <= duration; tick++) {
+            for (int tick = 1; tick <= duration && running; tick++) {
                 try {
                     Thread.sleep(tickTime);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
                 }
+                if (!running) break;
                 sendBroadcast(new TickBroadcast(tick));
                 stats.incrementRuntime();
             }
-            sendBroadcast(new TerminatedBroadcast(getName()));
-            System.out.println("TimeService has terminated");
+            if (running) {
+                sendBroadcast(new TerminatedBroadcast(getName()));
+                System.out.println("TimeService has terminated");
+            }
         });
         timerThread.setDaemon(true);
         timerThread.start();

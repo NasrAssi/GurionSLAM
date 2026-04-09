@@ -138,10 +138,16 @@ public class FusionSlam {
             LinkedList<CloudPoint> resultCoordinates = new LinkedList<>();
 
             int minSize = Math.min(object.getCoordinates().size(), oldM.getCoordinates().size());
+            int maxSize = Math.max(object.getCoordinates().size(), oldM.getCoordinates().size());
             for (int i = 0; i < minSize; i++) {
                 double x = (object.getCoordinates().get(i).getX() + oldM.getCoordinates().get(i).getX()) / 2;
                 double y = (object.getCoordinates().get(i).getY() + oldM.getCoordinates().get(i).getY()) / 2;
                 resultCoordinates.add(new CloudPoint(x, y));
+            }
+            List<CloudPoint> longer = object.getCoordinates().size() > oldM.getCoordinates().size()
+                    ? object.getCoordinates() : oldM.getCoordinates();
+            for (int i = minSize; i < maxSize; i++) {
+                resultCoordinates.add(new CloudPoint(longer.get(i).getX(), longer.get(i).getY()));
             }
             oldM.setCoordinates(resultCoordinates);
             return false;
